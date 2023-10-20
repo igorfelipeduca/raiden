@@ -30,15 +30,17 @@ export default function Dashboard() {
   const [dashboardId, setDashboardId] = useState<number>();
 
   useEffect(() => {
-    setDashboardId(Number(window.location.href.split("?dashboard=")[1]));
+    if (typeof window !== "undefined") {
+      setDashboardId(Number(window.location.href.split("?dashboard=")[1]));
 
-    supabase.auth.getUser().then((loggedUser) => {
-      if (loggedUser.data.user) {
-        setUser(loggedUser.data.user);
+      supabase.auth.getUser().then((loggedUser) => {
+        if (loggedUser.data.user) {
+          setUser(loggedUser.data.user);
 
-        console.log({ user: loggedUser.data.user });
-      }
-    });
+          console.log({ user: loggedUser.data.user });
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
