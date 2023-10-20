@@ -1,9 +1,8 @@
 import { CircleDot } from "lucide-react";
-import EventToast from "./EventTrigger";
 import { useEffect, useRef, useState } from "react";
 import { Toast, useToast } from "../contexts/toastContext";
-import { Button } from "@nextui-org/react";
 import { toast } from "sonner";
+import EventToast from "./EventTrigger";
 
 export default function LayoutPreview() {
   const [replayVisible, setReplayVisible] = useState<boolean>(false);
@@ -155,7 +154,7 @@ export default function LayoutPreview() {
             return self.findIndex((t) => t.text === toast.text) === index;
           })
           .map((item, index) => (
-            <EvenstToast toast={item} key={index} />
+            <EventToast toast={{ ...item, duration: 0 }} key={index} isStatic />
           ))}
       </div>
     </div>
