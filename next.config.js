@@ -5,6 +5,26 @@ const nextConfig = {
     NEXT_SUPABASE_ANON_KEY:
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvaGR2eXBieHN5bmdmZGlvY3lmIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc2MDA2ODMsImV4cCI6MjAxMzE3NjY4M30.-UvrWgdMIT04W-2XiR-1uqW3ZcJ9dfrJZnSR4SWZ7kI",
   },
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "*" },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET,DELETE,PATCH,POST,PUT",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value:
+              "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
