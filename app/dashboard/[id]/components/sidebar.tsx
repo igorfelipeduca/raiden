@@ -20,13 +20,15 @@ const supabase = createClient(
   process.env.NEXT_SUPABASE_ANON_KEY as string
 );
 
-export default function Sidebar() {
+interface SidebarProps {
+  dashboardId: string;
+}
+
+export default function Sidebar({ dashboardId }: SidebarProps) {
   const [user, setUser] = useState<User>();
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [workspace, setWorkspace] = useState<Workspace>();
   const [loading, setLoading] = useState<boolean>(true);
-
-  const dashboardId = Number(window.location.href.split("?dashboard=")[1]);
 
   useEffect(() => {
     supabase.auth.getUser().then((loggedUser) => {

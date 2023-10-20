@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import { ToastProvider } from "../contexts/toastContext";
+import { ToastProvider } from "../../contexts/toastContext";
 import { Toaster } from "sonner";
 import Sidebar from "./components/sidebar";
 
@@ -20,13 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ToastProvider>
-          <div className="flex">
-            <Sidebar />
-
-            <div className="pl-48">{children}</div>
-          </div>
-        </ToastProvider>
+        <ToastProvider>{children}</ToastProvider>
 
         <Toaster />
       </body>

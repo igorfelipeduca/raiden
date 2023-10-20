@@ -3,7 +3,7 @@ import { Toast } from "../../contexts/toastContext";
 import { parseTimestamp } from "../../utils/parseTimestamp";
 import EventToast from "../EventTrigger";
 import { User, createClient } from "@supabase/supabase-js";
-import TriggerEvent from "../../dashboard/components/triggerEvent";
+import TriggerEvent from "../../dashboard/[id]/components/triggerEvent";
 import { Check, Trash2, ZapIcon } from "lucide-react";
 import useNotify from "../../hooks/useNotify";
 import { toast } from "sonner";

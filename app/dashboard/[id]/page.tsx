@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Toast } from "../contexts/toastContext";
+import { Toast } from "../../contexts/toastContext";
 import { User, createClient } from "@supabase/supabase-js";
-import CategoryBox, { Category } from "../components/CategoryBox";
-import { welcomeUser } from "../utils/welcomeUser";
+import CategoryBox, { Category } from "../../components/CategoryBox";
+import { welcomeUser } from "../../utils/welcomeUser";
 import { Chip } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
+import Sidebar from "./components/sidebar";
 
 export interface Workspace {
   id?: string;
@@ -20,7 +21,13 @@ const supabase = createClient(
   process.env.NEXT_SUPABASE_ANON_KEY as string
 );
 
-export default function Dashboard() {
+interface DashboardProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function Dashboard({ params }: DashboardProps) {
   const [user, setUser] = useState<User>();
   const [welcomed, setWelcomed] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -203,51 +210,59 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="h-screen">
-      <div className="px-16 pt-10 pb-16 h-full">
-        <div className="flex gap-x-2 items-center mb-8">
-          <h1 className="text-3xl text-black font-bold">{workspace?.name}</h1>
+    <div className="flex">
+      <Sidebar dashboardId={params.id} />
 
-          {!loading ? (
-            <Chip color="primary" variant="shadow">
-              {workspace?.tier}
-            </Chip>
-          ) : (
-            <></>
-          )}
-        </div>
+      <div className="pl-48">
+        <div className="h-screen">
+          <div className="px-16 pt-10 pb-16 h-full">
+            <div className="flex gap-x-2 items-center mb-8">
+              <h1 className="text-3xl text-black font-bold">
+                {workspace?.name}
+              </h1>
 
-        <div className="h-full">
-          {loading ? (
-            <div className="flex gap-x-4 h-full">
-              {Array(3)
-                .fill(Math.random())
-                .map((_, index) => (
+              {!loading ? (
+                <Chip color="primary" variant="shadow">
+                  {workspace?.tier}
+                </Chip>
+              ) : (
+                <></>
+              )}
+            </div>
+
+            <div className="h-full">
+              {loading ? (
+                <div className="flex gap-x-4 h-full">
+                  {Array(3)
+                    .fill(Math.random())
+                    .map((_, index) => (
+                      <div
+                        className="rounded-xl bg-inherit border border-dashed border-zinc-200 shadow-md p-4 w-[35rem] h-full animate-pulse"
+                        key={index}
+                      />
+                    ))}
+                </div>
+              ) : (
+                <div className="flex gap-x-4">
+                  {categories.map((category, index) => (
+                    <CategoryBox
+                      categories={categories}
+                      setCategories={setCategories}
+                      category={category}
+                      key={index}
+                    />
+                  ))}
+
                   <div
-                    className="rounded-xl bg-inherit border border-dashed border-zinc-200 shadow-md p-4 w-[35rem] h-full animate-pulse"
-                    key={index}
-                  />
-                ))}
+                    className="h-16 w-16 p-4 rounded-xl border border-dashed border-zinc-200 flex justify-center items-center text-zinc-200  transition-all duration-150 ease-linear hover:border-zinc-500 hover:text-zinc-500 cursor-pointer"
+                    onClick={createCategory}
+                  >
+                    <PlusIcon />
+                  </div>
+                </div>
+              )}
             </div>
-          ) : (
-            <div className="flex gap-x-4">
-              {categories.map((category, index) => (
-                <CategoryBox
-                  categories={categories}
-                  setCategories={setCategories}
-                  category={category}
-                  key={index}
-                />
-              ))}
-
-              <div
-                className="h-16 w-16 p-4 rounded-xl border border-dashed border-zinc-200 flex justify-center items-center text-zinc-200  transition-all duration-150 ease-linear hover:border-zinc-500 hover:text-zinc-500 cursor-pointer"
-                onClick={createCategory}
-              >
-                <PlusIcon />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
