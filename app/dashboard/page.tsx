@@ -27,10 +27,11 @@ export default function Dashboard() {
   const [workspace, setWorkspace] = useState<Workspace>();
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const dashboardId = Number(window.location.href.split("?dashboard=")[1]);
+  const [dashboardId, setDashboardId] = useState<number>();
 
   useEffect(() => {
+    setDashboardId(Number(window.location.href.split("?dashboard=")[1]));
+
     supabase.auth.getUser().then((loggedUser) => {
       if (loggedUser.data.user) {
         setUser(loggedUser.data.user);
