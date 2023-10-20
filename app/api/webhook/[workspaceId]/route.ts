@@ -35,5 +35,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
     body
   );
 
-  return new Response(JSON.stringify({ createdToast, createdNotification }));
+  return new Response(JSON.stringify({ createdToast, createdNotification }), {
+    status: 201,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
 }

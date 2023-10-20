@@ -115,10 +115,47 @@ export default function Profile() {
   }
 
   return (
-    <Avatar
-      radius="full"
-      size="md"
-      src="https://images.unsplash.com/photo-1697197850355-c70e8ea18394?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    />
+    <Popover>
+      <PopoverTrigger asChild onClick={onOpen}>
+        <Avatar
+          radius="full"
+          size="md"
+          src={
+            "https://images.unsplash.com/photo-1697197850355-c70e8ea18394?auto=format&fit=crop&q=80&w=1974&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
+          className="cursor-pointer"
+        />
+      </PopoverTrigger>
+
+      <PopoverContent className="w-[25rem]">
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <h4 className="font-medium leading-none">Notifications</h4>
+            <p className="text-sm text-muted-foreground">
+              Here are listed all of the notifications you have received.
+            </p>
+
+            <div className="space-y-2">
+              {notifications.map((item, index) => (
+                <Notification
+                  notification={item}
+                  key={index}
+                  setNotifications={setNotifications}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <Button
+            className="bg-black rounde-lg text-white text-sm"
+            onPress={markAllAsRead}
+          >
+            <CheckCheck className="h-4 w-4" /> Mark all as read
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
