@@ -11,9 +11,7 @@ const supabase = createClient(
 );
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  const url = req.url ?? "";
-
-  const workspaceId = url.split("/api/webhook/")[1];
+  const body = (await req.json()) as Payload;
 
   const apiKey = req.headers.get("x-api-key");
 
@@ -21,7 +19,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return new Response("No API key provided", { status: 401 });
   }
 
-  const databaseKey = await supabase.from("keys").select("*");
+  const databaseKey = await supabase.from("keys").select("*").eq("key", apiKey);
 
   const isApiKeyValid = databaseKey.data?.length;
 
@@ -29,7 +27,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return new Response("Invalid API key", { status: 401 });
   }
 
-  const body = (await req.json()) as Payload;
+  console.log({ body });
 
   const { createdToast, createdNotification } = await createAndNotifyToast(
     body

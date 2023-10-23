@@ -21,7 +21,7 @@ export interface Toast {
 interface ToastContextType {
   toasts: Toast[];
   memoryToasts: Toast[];
-  addToast: (toast: Toast) => void;
+  addToast: (toast: Toast, silent?: boolean) => void;
   removeToast: (id: string) => void;
   cleanToasts: () => void;
 }
@@ -39,7 +39,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const { create } = useNotify();
 
-  const addToast = (toast: Toast) => {
+  const addToast = (toast: Toast, silent?: boolean) => {
     if (
       toasts.some((item) =>
         memoryToasts.some((item) => item.text === toast.text)
@@ -58,7 +58,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     memoryToasts.push({ ...toast, id: newToastId });
 
     supabase.auth.getUser().then((loggedUser) => {
-      if (loggedUser.data?.user) {
+      if (loggedUser.data?.user && !silent) {
         create(`New event: ${toast.text}`, loggedUser.data.user.id).then(() => {
           console.log("Notification created");
         });

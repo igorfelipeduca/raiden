@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import RaidenNavbar from "../../components/Navbar";
-import { ToastProvider } from "../contexts/toastContext";
 import { Toaster } from "sonner";
+import { ToastProvider } from "../contexts/toastContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,16 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} dark dark:bg-black`}>
-        <ToastProvider>
-          <div className="py-8">
-            <RaidenNavbar />
-          </div>
+      <body className={inter.className}>
+        <ToastProvider>{children}</ToastProvider>
 
-          <Toaster />
-
-          {children}
-        </ToastProvider>
+        <Toaster />
       </body>
     </html>
   );

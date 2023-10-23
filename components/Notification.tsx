@@ -1,5 +1,5 @@
 import { Check, XIcon } from "lucide-react";
-import { parseTimestamp } from "../utils/parseTimestamp";
+import { parseTimestamp } from "../app/utils/parseTimestamp";
 import { Notification } from "./Profile";
 import { createClient } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
@@ -9,12 +9,14 @@ const supabase = createClient(
   process.env.NEXT_SUPABASE_ANON_KEY as string
 );
 
-export default function Notification({
+export default function NotificationElement({
   notification,
   setNotifications,
+  size,
 }: {
   notification: Notification;
   setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+  size?: "sm" | "md" | "lg";
 }) {
   const [deleted, setDeleted] = useState<boolean>(false);
 
@@ -35,17 +37,17 @@ export default function Notification({
 
   return (
     <div
-      className={`py-2 px-4 rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-600 flex items-center justify-between w-full ${
-        deleted ? "animate-out fade-out slide-out-to-top-0" : ""
-      }`}
+      className={`py-2 px-4 rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-600 flex items-center justify-between ${
+        size === "sm" ? "min-w-max" : "min-w-[10rem]"
+      } ${deleted ? "animate-out fade-out slide-out-to-top-0" : ""}`}
     >
-      <div className="flex gap-x-2 items-center">
+      <div className="flex gap-x-4 items-center">
         <XIcon
           className="h-4 w-4 transition-all duration-150 ease-linear hover:text-zinc-700 hover:scale-105 cursor-pointer"
           onClick={markAsRead}
         />
 
-        <h3 className="text-sm">{notification.text}</h3>
+        <h3 className="text-sm max-w-sm">{notification.text}</h3>
       </div>
 
       <div className="text-xs text-zinc-400">{timeNow}</div>

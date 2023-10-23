@@ -1,6 +1,6 @@
 import { User, createClient } from "@supabase/supabase-js";
 import { toast } from "sonner";
-import { Category } from "../components/CategoryBox";
+import { Category } from "../../components/CategoryBox";
 import { SetStateAction } from "react";
 import { Toast } from "../contexts/toastContext";
 
@@ -13,8 +13,7 @@ export const welcomeUser = async (
   targetUser: User,
   welcomed: boolean,
   setCategories: React.Dispatch<SetStateAction<Category[]>>,
-  setWelcomed: React.Dispatch<SetStateAction<boolean>>,
-  setToasts: React.Dispatch<SetStateAction<Toast[]>>
+  setWelcomed: React.Dispatch<SetStateAction<boolean>>
 ) => {
   if (welcomed) return;
 
@@ -95,7 +94,6 @@ export const welcomeUser = async (
       .single();
 
     if (!newToast.data) return;
-    setToasts((toasts) => [...toasts, newToast.data]);
 
     setWelcomed(true);
   }

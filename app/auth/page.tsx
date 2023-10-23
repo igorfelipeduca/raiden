@@ -12,6 +12,14 @@ export default function Auth() {
   useEffect(() => {
     supabase.auth.getUser().then((user) => {
       if (user) {
+        if (!user.data.user) return;
+
+        supabase.from("users").upsert({
+          id: user.data.user.id,
+          email: user.data.user.email,
+          username: user.data.user.user_metadata.full_name,
+        });
+
         window.location.href = "/dashboard";
       }
     });

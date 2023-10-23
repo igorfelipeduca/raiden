@@ -42,9 +42,9 @@ export default function Login() {
       <div className="p-16 flex flex-col justify-between">
         <Link href={"/"}>
           <NextImage
-            src={"/raiden-black-png.png"}
-            alt="Hiso Logo"
-            className="h-16 w-auto"
+            src={"/raiden-new-png.png"}
+            alt="Raiden Logo"
+            className="h-24 w-auto"
             isBlurred
           />
         </Link>

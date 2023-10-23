@@ -1,4 +1,4 @@
-import EventToast from "@/app/components/EventTrigger";
+import EventToast from "@/components/EventTrigger";
 import { Toast, useToast } from "@/app/contexts/toastContext";
 import {
   Modal,

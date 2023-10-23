@@ -2,9 +2,8 @@
 
 import { Avatar, Badge, Button } from "@nextui-org/react";
 import { User, createClient } from "@supabase/supabase-js";
-import { Check, CheckCheck } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import {
   Popover,
   PopoverContent,
@@ -26,6 +25,7 @@ const supabase = createClient(
 export default function Profile() {
   const [user, setUser] = useState<User>();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     supabase.auth.getUser().then((loggedUser) => {
@@ -57,12 +57,15 @@ export default function Profile() {
       });
   };
 
-  const markAllAsRead = () => {
-    notifications.forEach((notification) => {
-      supabase.from("notifications").delete().eq("id", notification.id);
-    });
+  const markAllAsRead = async () => {
+    setLoading(true);
+
+    for (const notification of notifications) {
+      await supabase.from("notifications").delete().eq("id", notification.id);
+    }
 
     setNotifications([]);
+    setLoading(false);
   };
 
   if (notifications.length) {
@@ -105,8 +108,15 @@ export default function Profile() {
             <Button
               className="bg-black rounde-lg text-white text-sm"
               onPress={markAllAsRead}
+              disabled={loading}
             >
-              <CheckCheck className="h-4 w-4" /> Mark all as read
+              {loading ? (
+                "Loading..."
+              ) : (
+                <div className="flex gap-x-2">
+                  <CheckCheck className="h-4 w-4" /> Mark all as read
+                </div>
+              )}
             </Button>
           </div>
         </PopoverContent>
@@ -127,34 +137,43 @@ export default function Profile() {
         />
       </PopoverTrigger>
 
-      <PopoverContent className="w-[25rem]">
-        <div className="grid gap-4">
+      <PopoverContent>
+        <div className="flex">
           <div className="space-y-2">
             <h4 className="font-medium leading-none">Notifications</h4>
             <p className="text-sm text-muted-foreground">
               Here are listed all of the notifications you have received.
             </p>
 
-            <div className="space-y-2">
+            <div className="space-y-2 w-full">
               {notifications.map((item, index) => (
                 <Notification
                   notification={item}
                   key={index}
                   setNotifications={setNotifications}
+                  size={"sm"}
                 />
               ))}
             </div>
           </div>
         </div>
 
-        <div className="mt-4">
-          <Button
-            className="bg-black rounde-lg text-white text-sm"
-            onPress={markAllAsRead}
-          >
-            <CheckCheck className="h-4 w-4" /> Mark all as read
-          </Button>
-        </div>
+        {notifications.length ? (
+          <div className="mt-4">
+            <Button
+              className="bg-black rounde-lg text-white text-sm"
+              onPress={markAllAsRead}
+            >
+              <CheckCheck className="h-4 w-4" /> Mark all as read
+            </Button>
+          </div>
+        ) : (
+          <div className="p-4 text-center">
+            <span className="text-zinc-400 text-xs">
+              Wait until I notify you something. You have 0 notifications.
+            </span>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );
