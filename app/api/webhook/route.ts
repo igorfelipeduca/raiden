@@ -13,7 +13,7 @@ const supabase = createClient(
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = (await req.json()) as Payload;
 
-  const apiKey = req.headers.get("x-api-key");
+  const apiKey = req.headers.get("x-api-key") ?? req.headers.get("X-API-KEY");
 
   if (!apiKey) {
     return new Response("No API key provided", { status: 401 });
