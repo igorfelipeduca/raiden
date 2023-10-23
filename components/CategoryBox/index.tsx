@@ -1,17 +1,19 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { Toast } from "../../contexts/toastContext";
-import { parseTimestamp } from "../../utils/parseTimestamp";
+import { Toast } from "../../app/contexts/toastContext";
+import { parseTimestamp } from "../../app/utils/parseTimestamp";
 import EventToast from "../EventTrigger";
 import { User, createClient } from "@supabase/supabase-js";
-import TriggerEvent from "../../dashboard/[id]/components/triggerEvent";
+import TriggerEvent from "../../app/dashboard/[id]/components/triggerEvent";
 import { Check, Trash2, ZapIcon } from "lucide-react";
-import useNotify from "../../hooks/useNotify";
+import useNotify from "../../app/hooks/useNotify";
 import { toast } from "sonner";
 import IntegrateCategory from "./components/IntegrateCategory";
 
 export interface Category {
   id: string;
   name: string;
+  owner: string;
+  workspace_id: string;
 }
 
 interface CategoryBoxProps {
@@ -39,13 +41,11 @@ export default function CategoryBox({
     supabase.auth.getUser().then((dataUser) => {
       if (dataUser.data.user) setUser(dataUser.data.user);
 
-      console.log({ category });
-
       supabase
         .from("toasts")
         .select("*")
         .eq("owner", dataUser.data.user?.id)
-        .eq("category_id", category.id)
+        .eq("category_id", Number(category.id))
         .then((res) => {
           if (!res.data?.length) return;
 
@@ -72,6 +72,19 @@ export default function CategoryBox({
   };
 
   const deleteCategory = async () => {
+    const categoryToasts = await supabase
+      .from("toasts")
+      .select("*")
+      .eq("category_id", category.id);
+
+    console.log({ categoryToasts });
+
+    if (!categoryToasts.data || !categoryToasts.data.length) return;
+
+    for (const toast of categoryToasts.data) {
+      await supabase.from("toasts").delete().eq("id", toast.id);
+    }
+
     const { data, error } = await supabase
       .from("categories")
       .delete()
@@ -79,11 +92,14 @@ export default function CategoryBox({
 
     if (error) {
       console.log({ error });
-    } else {
+    }
+
+    if (data) {
       create(`Category ${category.name} deleted`, user?.id ?? "");
       setCategories(categories.filter((c) => c.id !== category.id));
 
       toast.success(`✨ Category ${category.name} deleted`);
+      toast.success(`🧹 ${categoryToasts.data.length} toasts deleted`);
     }
   };
 
@@ -103,7 +119,7 @@ export default function CategoryBox({
   };
 
   return (
-    <div className="rounded-xl bg-inherit border border-zinc-200 shadow-md px-4 py-8 w-[35rem] flex flex-col justify-between">
+    <div className="rounded-xl bg-inherit border border-zinc-200 shadow-md px-4 py-8 flex min-w-[35rem] flex-col justify-between">
       <div>
         <div className="flex justify-between">
           <input
@@ -129,7 +145,8 @@ export default function CategoryBox({
 
             <IntegrateCategory
               owner={user ? user.id : ""}
-              categoryId={category.id}
+              category={category}
+              workspaceId={category.workspace_id}
             />
 
             <Trash2

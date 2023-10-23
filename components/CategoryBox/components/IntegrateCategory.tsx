@@ -1,30 +1,27 @@
 import React from "react";
 import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownSection,
-  DropdownItem,
   Code,
   Textarea,
   Popover,
   PopoverTrigger,
   PopoverContent,
-  Button,
 } from "@nextui-org/react";
 
-import { Fingerprint, FolderDot, ZapIcon } from "lucide-react";
+import { Fingerprint, Globe, PanelLeft, ZapIcon } from "lucide-react";
 import EventToast from "../../EventTrigger";
 import { Toast } from "@/app/contexts/toastContext";
+import { Category } from "..";
 
 interface IntegrateCategoryProps {
   owner: string;
-  categoryId: string;
+  category: Category;
+  workspaceId: string;
 }
 
 export default function IntegrateCategory({
   owner,
-  categoryId,
+  category,
+  workspaceId,
 }: IntegrateCategoryProps) {
   const iconClasses =
     "text-xl text-default-500 pointer-events-none flex-shrink-0";
@@ -37,7 +34,7 @@ export default function IntegrateCategory({
     "text": "Real-time notification!",
     "emoji": "⚡️",
     "owner": "${owner}",
-    "category_id": "${categoryId}"
+    "category_id": "${category.id}"
   });
 
   var requestOptions = {
@@ -74,13 +71,27 @@ export default function IntegrateCategory({
 
           <div className="p-1 border border-zinc-200 rounded-lg shadow-sm">
             <div className="flex items-center gap-x-2 text-zinc-400">
-              <FolderDot className={`${iconClasses} text-zinc-500`} />
+              <Globe className={`${iconClasses} text-zinc-500`} />
 
               <h3 className="text-sm flex items-center gap-x-2">
                 Category id{" "}
                 <span>
                   {" "}
-                  <Code className="text-zinc-500 text-sm">36</Code>
+                  <Code className="text-zinc-500 text-sm">{category.id}</Code>
+                </span>
+              </h3>
+            </div>
+          </div>
+
+          <div className="p-1 border border-zinc-200 rounded-lg shadow-sm">
+            <div className="flex items-center gap-x-2 text-zinc-400">
+              <PanelLeft className={`${iconClasses} text-zinc-500`} />
+
+              <h3 className="text-sm flex items-center gap-x-2">
+                Workspace id{" "}
+                <span>
+                  {" "}
+                  <Code className="text-zinc-500 text-sm">{workspaceId}</Code>
                 </span>
               </h3>
             </div>
@@ -95,7 +106,7 @@ export default function IntegrateCategory({
                 <span>
                   {" "}
                   <Code className="text-zinc-500 text-sm">
-                    f48feb82-d265-495b-8ac6-930b0a525857
+                    {category.owner}
                   </Code>
                 </span>
               </h3>

@@ -1,6 +1,6 @@
 import { CircleDot } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Toast, useToast } from "../contexts/toastContext";
+import { Toast, useToast } from "../app/contexts/toastContext";
 import { toast } from "sonner";
 import EventToast from "./EventTrigger";
 
@@ -124,31 +124,22 @@ export default function LayoutPreview() {
   }, [replay]);
 
   return (
-    <div className="w-full mx-auto lg:max-w-3xl border border-zinc-200 rounded-xl p-8 shadow-lg shadow-zinc-100">
-      {/* {replayVisible && (
-        <div className="flex justify-center pb-4">
-          <Button
-            className="bg-black text-white rounded-full font-semibold animate-in fade-in"
-            onClick={() => setReplay(true)}
-          >
-            Replay ✨
-          </Button>
-        </div>
-      )} */}
-
+    <div className="w-full mx-auto lg:max-w-3xl border border-zinc-200 rounded-xl p-8 shadow-lg shadow-zinc-100 dark:shadow-none dark:border-zinc-700">
       <div className="flex justify-center">
         <div className="flex gap-x-2 text-zinc-700 items-center">
           <CircleDot
             className={`text-blue-500 transition-all duration-400 ease-in-out ${
-              toastAdded ? "scale-105 opacity-30" : ""
+              toastAdded ? "animate-pulse" : ""
             }`}
           />
 
-          <h1 className="text-xl font-semibold">Duca&apos;s events</h1>
+          <h1 className="text-xl font-semibold dark:text-zinc-400">
+            Duca&apos;s events
+          </h1>
         </div>
       </div>
 
-      <div className="w-full flex justify-center mt-8 flex-col gap-y-4 mx-auto max-w-md">
+      <div className="w-full flex justify-center mt-8 flex-col mx-auto max-w-md">
         {toasts
           .filter((toast, index, self) => {
             return self.findIndex((t) => t.text === toast.text) === index;

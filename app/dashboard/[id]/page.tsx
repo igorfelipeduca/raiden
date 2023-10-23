@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { Toast } from "../../contexts/toastContext";
 import { User, createClient } from "@supabase/supabase-js";
-import CategoryBox, { Category } from "../../components/CategoryBox";
+import CategoryBox, { Category } from "../../../components/CategoryBox";
 import { welcomeUser } from "../../utils/welcomeUser";
-import { Chip } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
-import Sidebar from "./components/sidebar";
+import { Chip, input } from "@nextui-org/react";
+import { PanelLeftOpen, PlusIcon } from "lucide-react";
+import Sidebar from "../../../components/Sidebar";
+import { toast } from "sonner";
 
 export interface Workspace {
   id?: string;
@@ -32,22 +33,17 @@ export default function Dashboard({ params }: DashboardProps) {
   const [welcomed, setWelcomed] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [workspace, setWorkspace] = useState<Workspace>();
-  const [toasts, setToasts] = useState<Toast[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dashboardId, setDashboardId] = useState<number>();
+  const [editingTitle, setEditingTitle] = useState<boolean>(false);
+  const [newWorkspaceTitle, setNewWorkspaceTitle] = useState<string>("");
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setDashboardId(Number(window.location.href.split("?dashboard=")[1]));
+    supabase.auth.getUser().then((loggedUser) => {
+      if (!loggedUser.data.user) return (window.location.href = "/login");
 
-      supabase.auth.getUser().then((loggedUser) => {
-        if (loggedUser.data.user) {
-          setUser(loggedUser.data.user);
-
-          console.log({ user: loggedUser.data.user });
-        }
-      });
-    }
+      setUser(loggedUser.data.user);
+    });
   }, []);
 
   useEffect(() => {
@@ -57,13 +53,15 @@ export default function Dashboard({ params }: DashboardProps) {
         .select("*")
         .eq("owner", user.id)
         .then((workspaceRes) => {
-          console.log({ workspaceRes });
+          if (!workspaceRes.data?.length) return;
 
           const targetWorkspace = () => {
             if (!workspaceRes.data?.length) return {} as Workspace;
 
-            if (dashboardId)
-              return workspaceRes.data?.filter((w) => w.id === dashboardId)[0];
+            if (params.id)
+              return workspaceRes.data?.filter(
+                (w) => w.id === Number(params.id)
+              )[0];
 
             return workspaceRes.data[0];
           };
@@ -80,9 +78,13 @@ export default function Dashboard({ params }: DashboardProps) {
               const filteredCategories = () => {
                 if (!res.data || !res.data.length) return [];
 
-                if (dashboardId)
+                console.log(
+                  res.data?.filter((c) => c.workspace_id === Number(params.id))
+                );
+
+                if (params.id)
                   return res.data?.filter(
-                    (c) => c.workspace_id === dashboardId
+                    (c) => c.workspace_id === Number(params.id)
                   );
 
                 return res.data;
@@ -94,39 +96,39 @@ export default function Dashboard({ params }: DashboardProps) {
                 user &&
                 !welcomed
               ) {
-                welcomeUser(
-                  user,
-                  welcomed,
-                  setCategories,
-                  setWelcomed,
-                  setToasts
-                ).then((welcomedData) => {
-                  const categories = () => {
-                    if (!welcomedData?.createdCategory.data)
-                      return {} as Category;
+                welcomeUser(user, welcomed, setCategories, setWelcomed).then(
+                  (welcomedData) => {
+                    const categories = () => {
+                      if (!welcomedData?.createdCategory.data)
+                        return {} as Category;
 
-                    return welcomedData?.createdCategory.data[0] as Category;
-                  };
+                      return welcomedData?.createdCategory.data[0] as Category;
+                    };
 
-                  const toasts = () => {
-                    if (!welcomedData?.createdToast.data) return {} as Toast;
+                    const toasts = () => {
+                      if (!welcomedData?.createdToast.data) return {} as Toast;
 
-                    return welcomedData?.createdToast.data[0] as Toast;
-                  };
+                      return welcomedData?.createdToast.data[0] as Toast;
+                    };
 
-                  const workspace = () => {
-                    if (!welcomedData?.createdWorkspace.data)
-                      return {} as Workspace;
+                    const workspace = () => {
+                      if (!welcomedData?.createdWorkspace.data)
+                        return {} as Workspace;
 
-                    return welcomedData?.createdWorkspace.data[0] as Workspace;
-                  };
+                      return welcomedData?.createdWorkspace
+                        .data[0] as Workspace;
+                    };
 
-                  setCategories((prev) => [...prev, categories()]);
-                  setToasts((prev) => [...prev, toasts()]);
+                    setCategories((prev) => [...prev, categories()]);
 
-                  setWorkspace(workspace());
-                });
+                    setWorkspace(workspace());
+                  }
+                );
               }
+
+              console.log(
+                !filteredCategories().length && workspaceRes.data?.length
+              );
 
               if (!filteredCategories().length && workspaceRes.data?.length) {
                 supabase
@@ -169,17 +171,13 @@ export default function Dashboard({ params }: DashboardProps) {
                     filteredToasts: filteredToasts(),
                     toastData: res.data,
                   });
-
-                  setToasts(filteredToasts());
                 });
-
-              if (loading) {
-                setLoading(false);
-              }
             });
+
+          setLoading(false);
         });
     }
-  }, [dashboardId, user]);
+  }, [params.id, user]);
 
   const createCategory = () => {
     supabase
@@ -197,29 +195,74 @@ export default function Dashboard({ params }: DashboardProps) {
       });
   };
 
-  const fetchCategoryToasts = () => {
+  const editWorkspaceTitle = (e: any) => {
+    e.preventDefault();
+
+    alert("a");
+
     supabase
-      .from("toasts")
+      .from("workspaces")
+      .update({ name: newWorkspaceTitle })
+      .eq("id", workspace?.id)
       .select("*")
-      .eq("category_id", categories[0].id)
       .then((res) => {
+        console.log({ res });
+
         if (!res.data || !res.data.length) return;
 
-        setToasts(res.data);
+        const actualWorkspace = workspace ?? ({} as Workspace);
+
+        setWorkspace({ ...actualWorkspace, name: res.data[0].name });
+
+        setEditingTitle(false);
+
+        toast.success(`Workspace title updated to ${res.data[0].name}`);
       });
   };
 
   return (
     <div className="flex">
-      <Sidebar dashboardId={params.id} />
+      <Sidebar
+        workspaceId={params.id}
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+      />
 
-      <div className="pl-48">
+      <div
+        className={`${
+          isSidebarOpen ? "pl-48" : ""
+        } transition-all duration-150 ease-linear`}
+      >
         <div className="h-screen">
           <div className="px-16 pt-10 pb-16 h-full">
+            {!isSidebarOpen ? (
+              <PanelLeftOpen
+                className="mb-8 text-zinc-300 hover:text-zinc-500 transition-all duration-150 ease-linear cursor-pointer"
+                onClick={() => setIsSidebarOpen(true)}
+              />
+            ) : (
+              <></>
+            )}
+
             <div className="flex gap-x-2 items-center mb-8">
-              <h1 className="text-3xl text-black font-bold">
-                {workspace?.name}
-              </h1>
+              {editingTitle ? (
+                <form onSubmit={editWorkspaceTitle}>
+                  <input
+                    type="text"
+                    className="bg-transparent outline-none text-3xl text-black"
+                    placeholder={workspace?.name}
+                    value={newWorkspaceTitle}
+                    onChange={(e) => setNewWorkspaceTitle(e.target.value)}
+                  />
+                </form>
+              ) : (
+                <h1
+                  className="text-3xl text-black font-bold"
+                  onClick={() => setEditingTitle(true)}
+                >
+                  {workspace?.name}
+                </h1>
+              )}
 
               {!loading ? (
                 <Chip color="primary" variant="shadow">

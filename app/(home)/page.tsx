@@ -1,17 +1,17 @@
 "use client";
 
-import LayoutPreview from "../components/LayoutPreview";
-import { Image } from "@nextui-org/react";
+import Image from "next/image";
+import LayoutPreview from "../../components/LayoutPreview";
+import RaidenLogo from "../../app/assets/raiden-new-png.png";
 
 export default function Home() {
   return (
     <main className="py-16">
       <div className="flex pb-8 justify-center">
         <Image
-          src="/raiden-black-png.png"
+          src={RaidenLogo}
           alt="Raiden"
-          className="h-32 w-32"
-          isBlurred
+          className="h-64 w-64 dark:invert"
         />
       </div>
 
@@ -22,7 +22,7 @@ export default function Home() {
       </div>
 
       <div className="flex justify-center">
-        <h3 className="text-lg lg:text-lg text-zinc-700 mt-2">
+        <h3 className="text-lg lg:text-lg text-zinc-700 mt-2 dark:text-zinc-400">
           a new way to be updated about EVERYTHING 🔮
         </h3>
       </div>

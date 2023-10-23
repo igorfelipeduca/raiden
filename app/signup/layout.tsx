@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import RaidenNavbar from "../components/Navbar";
+import RaidenNavbar from "../../components/Navbar";
 import { ToastProvider } from "../contexts/toastContext";
 import { Toaster } from "sonner";
 
