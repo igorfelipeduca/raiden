@@ -27,7 +27,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return new Response("Invalid API key", { status: 401 });
   }
 
-  return new Response("Valid API Key", {
-    status: 200,
-  });
+  return NextResponse.json({ message: "Valid API Key" }, { status: 200 });
 }
