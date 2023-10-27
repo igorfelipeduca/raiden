@@ -79,27 +79,31 @@ export default function CategoryBox({
 
     console.log({ categoryToasts });
 
-    if (!categoryToasts.data || !categoryToasts.data.length) return;
+    if (categoryToasts.data && categoryToasts.data.length) {
+      for (const toast of categoryToasts.data) {
+        await supabase.from("toasts").delete().eq("id", toast.id);
+      }
 
-    for (const toast of categoryToasts.data) {
-      await supabase.from("toasts").delete().eq("id", toast.id);
+      toast.success(`🧹 ${categoryToasts.data.length} toasts deleted`);
     }
 
     const { data, error } = await supabase
       .from("categories")
       .delete()
-      .eq("id", category.id);
+      .eq("id", category.id)
+      .select("*");
 
     if (error) {
       console.log({ error });
     }
 
+    console.log({ data });
+
     if (data) {
       create(`Category ${category.name} deleted`, user?.id ?? "");
       setCategories(categories.filter((c) => c.id !== category.id));
 
-      toast.success(`✨ Category ${category.name} deleted`);
-      toast.success(`🧹 ${categoryToasts.data.length} toasts deleted`);
+      toast.success(`🧹 Category ${category.name} deleted`);
     }
   };
 

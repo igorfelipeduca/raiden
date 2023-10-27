@@ -6,7 +6,7 @@ import RaidenLogo from "../../app/assets/raiden-new-png.png";
 
 export default function Home() {
   return (
-    <main className="py-16">
+    <main className="py-16 h-screen">
       <div className="flex pb-8 justify-center">
         <Image
           src={RaidenLogo}

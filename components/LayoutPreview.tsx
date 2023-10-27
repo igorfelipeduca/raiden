@@ -53,7 +53,7 @@ export default function LayoutPreview() {
   const populateToasts = () => {
     toastList.forEach((toast, index) => {
       setTimeout(() => {
-        addToast(toast);
+        addToast(toast, true);
         setToastAdded(true);
 
         setTimeout(() => {
@@ -65,7 +65,7 @@ export default function LayoutPreview() {
     setTimeout(() => {
       secondToastList.forEach((toast, index) => {
         setTimeout(() => {
-          addToast(toast);
+          addToast(toast, true);
           setToastAdded(true);
 
           setTimeout(() => {
@@ -78,7 +78,7 @@ export default function LayoutPreview() {
     setTimeout(() => {
       thirdToastList.forEach((toast, index) => {
         setTimeout(() => {
-          addToast(toast);
+          addToast(toast, true);
           setToastAdded(true);
 
           setTimeout(() => {
