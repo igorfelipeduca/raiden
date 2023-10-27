@@ -97,7 +97,7 @@ export default function Sidebar({
 
   return (
     <div
-      className={`aside h-screen fixed bg-zinc-100 p-4 flex flex-col justify-between ${
+      className={`aside h-screen fixed bg-zinc-100 p-4 flex flex-col justify-between z-50 ${
         isClosing ? "animate-out slide-out-to-left" : ""
       } ${isOpen ? "animate-in slide-in-from-left" : "hidden"}`}
     >

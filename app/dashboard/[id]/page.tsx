@@ -5,10 +5,11 @@ import { Toast } from "../../contexts/toastContext";
 import { User, createClient } from "@supabase/supabase-js";
 import CategoryBox, { Category } from "../../../components/CategoryBox";
 import { welcomeUser } from "../../utils/welcomeUser";
-import { Chip, input } from "@nextui-org/react";
+import { Chip } from "@nextui-org/react";
 import { PanelLeftOpen, PlusIcon } from "lucide-react";
 import Sidebar from "../../../components/Sidebar";
 import { toast } from "sonner";
+import Filters from "./components/filters";
 
 export interface Workspace {
   id?: string;
@@ -244,36 +245,46 @@ export default function Dashboard({ params }: DashboardProps) {
               <></>
             )}
 
-            <div className="flex gap-x-2 items-center mb-8">
-              {editingTitle ? (
-                <form onSubmit={editWorkspaceTitle}>
-                  <input
-                    type="text"
-                    className="bg-transparent outline-none text-3xl text-black"
-                    placeholder={workspace?.name}
-                    value={newWorkspaceTitle}
-                    onChange={(e) => setNewWorkspaceTitle(e.target.value)}
-                  />
-                </form>
-              ) : (
-                <h1
-                  className="text-3xl text-black font-bold"
-                  onClick={() => setEditingTitle(true)}
-                >
-                  {workspace?.name}
-                </h1>
-              )}
+            <div className="fixed w-screen flex gap-x-2 items-center mb-8 justify-between">
+              <div className="flex gap-x-2 items-center">
+                {editingTitle ? (
+                  <form onSubmit={editWorkspaceTitle}>
+                    <input
+                      type="text"
+                      className="bg-transparent outline-none text-3xl text-black"
+                      placeholder={workspace?.name}
+                      value={newWorkspaceTitle}
+                      onChange={(e) => setNewWorkspaceTitle(e.target.value)}
+                    />
+                  </form>
+                ) : (
+                  <div className="flex items-center">
+                    <div className="flex gap-x-4 items-center">
+                      <h1
+                        className="text-3xl text-black font-bold"
+                        onClick={() => setEditingTitle(true)}
+                      >
+                        {workspace?.name}
+                      </h1>
+                    </div>
+                  </div>
+                )}
 
-              {!loading ? (
-                <Chip color="primary" variant="shadow">
-                  {workspace?.tier}
-                </Chip>
-              ) : (
-                <></>
-              )}
+                <div>
+                  {!loading ? (
+                    <Chip color="primary" variant="shadow">
+                      {workspace?.tier}
+                    </Chip>
+                  ) : (
+                    <></>
+                  )}
+                </div>
+              </div>
+
+              <Filters />
             </div>
 
-            <div className="h-full">
+            <div className="h-full mt-32">
               {loading ? (
                 <div className="flex gap-x-4 h-full">
                   {Array(3)

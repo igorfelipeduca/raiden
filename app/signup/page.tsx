@@ -39,7 +39,7 @@ export default function Signup() {
       <div className="p-16 flex flex-col justify-between">
         <Link href={"/"}>
           <NextImage
-            src={"/raiden-black-png.png"}
+            src={"/raiden-new-png.png"}
             alt="Hiso Logo"
             className="h-16 w-auto"
             isBlurred
