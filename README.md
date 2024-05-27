@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Raiden
+
+Raiden is a web application built with Next.js, leveraging TypeScript and Tailwind CSS to create a responsive and scalable user interface. Raiden's main purpose is to listen to webhooks from Zapier and store them into a SCRUM table. This project was originally created to help marketplaces to organize their webhooks and customer events without the need of paying for a expensive platform.
+
+### Disclaimer: This project is not working anymore, so its features can not be tested. [Check this showcase video](https://youtu.be/r8giO0QDCgc)
+
+## Features
+
+- **Next.js Framework**: Utilizes the powerful Next.js framework for server-side rendering and static site generation.
+- **TypeScript**: Strongly typed language to improve code quality and maintainability.
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+- **Custom Google Font**: Automatically optimized and loaded using `next/font`.
+- **Modular Components**: Organized structure with reusable components.
 
 ## Getting Started
 
-First, run the development server:
+To get started with Raiden, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Clone the repository**:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   ```bash
+   git clone https://github.com/igorfelipeduca/raiden.git
+   cd raiden
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. **Install dependencies**:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Run the development server**:
+
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+4. **Open the application**:
+   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Development
+
+You can start editing the application by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about Next.js, check out the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - Interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+The easiest way to deploy your Next.js application is to use the [Vercel Platform](https://vercel.com) from the creators of Next.js. For more details, check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is licensed under the MIT License.
+
+---
+
+For more information, please visit the [Raiden project page](https://github.com/igorfelipeduca/raiden).
